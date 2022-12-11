@@ -1,0 +1,58 @@
+Objective: Days to death prediction using genetical data
+
+First of all:
+
+txt to csv data wrangling
+
+Common procedures throughout 2 models(XGBoost, RandomForest):
+
+1) # dropping demographic_id as it is unique to person and no use for us
+
+2) # dropping age_at_diagnosis, we have the same as days_to_birth
+
+3) # changing paper_clinical_stage to number respectively (1,2,3,4)
+
+4) # changing vital_status to number respectively (0,1)
+
+5) # finding current age = days_to_birth / -365.24
+
+6) # had to convert to int indirectly ("vital_status", "paper_clinical_stage")
+
+7) # dropping dead with unknown year_of_death as it makes no sense
+
+8) df.insert(5, 'age_at_death', df['year_of_death'] - (df['year_of_birth']))
+   df.insert(3, 'years_in_diagnosis', df['age_current'] - df['age_at_index'])
+
+9) # df_diagnosed_dead will be used for day calculation later
+
+10) # dropping death related columns to prevent data leak
+
+
+*** XGBoost Model:
+
+1) # implementing the XGBClassifier
+
+2) # Alive, Dead classification accuracy: 100%
+
+3) # implementing the XGBRegressor
+
+4) # days_to_death prediction RMSE: 16.605655939842833
+
+5) # implementing the XGBRegressor with better features ('years_in_diagnosis', 'ENSG00000007952.18', 'ENSG00000006451.8', 'age_at_index')
+
+6) # days_to_death prediction RMSE: 14.39454632595497
+
+
+*** LogisticRegression, RandomForest Model:
+
+1) # implementing the LogisticRegression
+
+2) # Alive, Dead classification accuracy: 100%
+
+3) # implementing the RandomForestRegressor(n_estimators=50, max_depth=10, random_state=1)
+
+4) # days_to_death prediction RMSE: 21.236155806206096
+
+
+
+
